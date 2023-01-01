@@ -51,10 +51,14 @@ class Timelapse:
 
     def __init__(
             self,
-            paused=0
+            enabled=False,
+            park_enabled=False,
+            park_paused=False
     ) -> None:
         super().__init__()
-        self.paused = paused
+        self.enabled = enabled
+        self.park_enabled = park_enabled
+        self.park_paused = park_paused
 
     def __str__(self) -> str:
-        return "Timelapse (paused: %d)" % (self.paused)
+        return "Timelapse (enabled: %r, park enabled: %r, park paused: %r)" % (self.enabled, self.park_enabled, self.park_paused)
