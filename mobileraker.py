@@ -199,7 +199,6 @@ class Client:
             elif key == "virtual_sdcard":
                 await self.parse_virtual_sdcard_update(object_data)
             elif key == "gcode_macro TIMELAPSE_TAKE_FRAME":
-                self.warning("Received TIMELAPSE_TAKE_FRAME")
                 await self.parse_timelapse_update(object_data)
 
     async def parse_server_info(self, message=None, err=None):
@@ -253,12 +252,12 @@ class Client:
         
         self.info("Received timelapse update: %s" % (timelapse))
         
-        if "enabled" in timelapse:
-            self.timelapse.enabled = timelapse["enabled"] == True
-        if "park" in timelapse and "enabled" in timelapse["park"]:
-            self.timelapse.park_enabled = timelapse["park"]["enabled"] == True        
+        if "enable" in timelapse:
+            self.timelapse.enabled = timelapse["enable"]
+        if "park" in timelapse and "enable" in timelapse["park"]:
+            self.timelapse.park_enabled = timelapse["park"]["enable"]       
         if "is_paused" in timelapse:
-            self.timelapse.park_paused = timelapse["is_paused"] == True
+            self.timelapse.park_paused = timelapse["is_paused"]
         else:
             self.warning("Received invalid timelapse update")
             
