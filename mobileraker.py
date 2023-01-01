@@ -324,8 +324,10 @@ class Client:
     def send_to_firebase(self, force=False):
         if not force and (not self.init_done or not self.klippy_ready):
             return
-        if self.timelapse.paused == "true":
+        if not force and (self.timelapse is not None and self.timelapse.paused == "true"):
+            self.warning("Timelapse paused, skipping update")
             return
+        self.info("self.timelapse: %s" % (self.timelapse))
         self.loop.create_task(self.task_firebase())
 
     async def task_firebase(self):
