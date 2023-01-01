@@ -254,7 +254,7 @@ class Client:
         if "is_paused" in timelapse:
             self.warning("Received timelapset update")
             self.timelapse.paused = timelapse["is_paused"]
-        else
+        else:
             self.warning("Received invalid timelapse update")
             
     async def query_printer_objects(self):
