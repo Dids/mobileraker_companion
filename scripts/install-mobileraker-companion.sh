@@ -4,7 +4,7 @@
 PYTHONDIR="${MOBILERAKER_VENV:-${HOME}/mobileraker-env}"
 REBUILD_ENV="${MOBILERAKER_REBUILD_ENV:-n}"
 FORCE_DEFAULTS="${MOBILERAKER_FORCE_DEFAULTS:-n}"
-LOG_PATH="${MOBILERAKER_LOG_PATH:-/tmp/mobileraker.log}"
+LOG_PATH="${MOBILERAKER_LOG_PATH:-${HOME}/klipper_logs/mobileraker.log}"
 
 SYSTEMDDIR="/etc/systemd/system"
 
@@ -55,7 +55,6 @@ EOF
     sudo systemctl enable mobileraker.service
     sudo systemctl daemon-reload
 }
-
 
 start_software()
 {
