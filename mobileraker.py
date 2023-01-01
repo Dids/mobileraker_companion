@@ -252,7 +252,7 @@ class Client:
     async def parse_timelapse_update(self, timelapse):
         
         if "is_paused" in timelapse:
-            self.warning("Received timelapset update")
+            self.warning("Received timelapse update: %s" % (timelapse))
             self.timelapse.paused = timelapse["is_paused"]
         else:
             self.warning("Received invalid timelapse update")
