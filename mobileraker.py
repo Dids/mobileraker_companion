@@ -76,6 +76,7 @@ class Client:
         self.print_stats: PrintStats = PrintStats()
         self.display_status: DisplayStatus = DisplayStatus()
         self.virtual_sdcard: VirtualSDCard = VirtualSDCard()
+        self.timelapse: Timelapse = Timelapse()
         self.last_request: CompanionRequestDto or None = None
         self.config = CompanionRemoteConfig()  # TODO: Fetch this from a remote server for easier configuration :)
         self.logger = logging.getLogger('Client')
@@ -199,6 +200,8 @@ class Client:
                 await self.parse_display_status_update(object_data)
             elif key == "virtual_sdcard":
                 await self.parse_virtual_sdcard_update(object_data)
+            elif key == "gcode_macro TIMELAPSE_TAKE_FRAME":
+                await self.parse_timelapse_update(object_data)
 
     async def parse_server_info(self, message=None, err=None):
         self.info("Received Server Info")
@@ -247,13 +250,19 @@ class Client:
             self.debug("Send to FB - Virtual SD")
             self.send_to_firebase()
 
+    async def parse_timelapse_update(self, timelapse):
+        
+        if "is_paused" in timelapse:
+            self.timelapse.paused = timelapse["is_paused"]
+            
     async def query_printer_objects(self):
         self.info("Querying printer Objects")
         params = {
             "objects": {
                 "print_stats": None,
                 # "display_status": None,
-                "virtual_sdcard": None
+                "virtual_sdcard": None,
+                "gcode_macro TIMELAPSE_TAKE_FRAME": None
             }
         }
         response, err = await self.send_and_receive_method("printer.objects.query", params)
@@ -265,7 +274,8 @@ class Client:
             "objects": {
                 "print_stats": None,
                 # "display_status": None,
-                "virtual_sdcard": None
+                "virtual_sdcard": None,
+                "gcode_macro TIMELAPSE_TAKE_FRAME": None
             }
         }
         await self.send_method("printer.objects.subscribe", self.parse_objects_response, params)
@@ -313,6 +323,8 @@ class Client:
 
     def send_to_firebase(self, force=False):
         if not force and (not self.init_done or not self.klippy_ready):
+            return
+        if self.timelapse.paused == "true":
             return
         self.loop.create_task(self.task_firebase())
 
