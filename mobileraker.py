@@ -251,11 +251,11 @@ class Client:
 
     async def parse_timelapse_update(self, timelapse):
         
-        # self.info("Received timelapse update: %s" % (timelapse))
+        self.info("Received timelapse update: %s" % (timelapse))
         
         if "enabled" in timelapse:
             self.timelapse.enabled = timelapse["enabled"] == True
-        if "park" in timelapse and "enable" in timelapse["park"]:
+        if "park" in timelapse and "enabled" in timelapse["park"]:
             self.timelapse.park_enabled = timelapse["park"]["enabled"] == True        
         if "is_paused" in timelapse:
             self.timelapse.park_paused = timelapse["is_paused"] == True
