@@ -1,4 +1,3 @@
-
 from typing import Dict
 
 from dtos.mobileraker.notification_config_dto import DeviceNotificationConfig
@@ -18,13 +17,11 @@ _mobileraker_en: Dict[str, str] = {
     'state_paused_body': 'Paused printing file: "$file"',
     'state_completed_body': 'Finished printing: "$file"',
     'state_error_body': 'Error while printing file: "$file"',
-
 }
 
 _mobileraker_de: Dict[str, str] = {
     'print_progress_title': 'Druck-Fortschritt von %s',
 }
-
 
 _mobileraker_hu: Dict[str, str] = {
 
@@ -38,33 +35,33 @@ _mobileraker_cnch: Dict[str, str] = {
 
 }
 
-
 languages: Dict[str, Dict[str, str]] = {
     'de': _mobileraker_de,
     'en': _mobileraker_en,
     'hu': _mobileraker_hu,
     'cn': _mobileraker_cnch,
     'cntw': _mobileraker_chtw,
-
 }
-
 
 def translate(country_code: str, str_key: str, data: dict[str, str] = {}):
     if country_code not in languages:
-        # fallback to en
+        # Fallback to English
         return translate('en', str_key, data)
+    
     translations = languages[country_code]
+    
     if str_key not in translations:
         if country_code == 'en':
             raise Exception(f'No language-entry found for "{str_key}"')
-        # fallback to en
+        # Fallback to English
         return translate('en', str_key, data)
+    
     translation = translations[str_key]
+    
     for name in data:
         translation = translation.replace(f"${name}", data[name])
 
     return translation
-
 
 def translate_using_snapshot(str_key: str, cfg: DeviceNotificationConfig, snap: PrinterSnapshot) -> str:
     data = {
