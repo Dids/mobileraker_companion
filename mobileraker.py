@@ -251,9 +251,14 @@ class Client:
 
     async def parse_timelapse_update(self, timelapse):
         
+        # self.info("Received timelapse update: %s" % (timelapse))
+        
+        if "enabled" in timelapse:
+            self.timelapse.enabled = timelapse["enabled"] == True
+        if "park" in timelapse and "enable" in timelapse["park"]:
+            self.timelapse.park_enabled = timelapse["park"]["enabled"] == True        
         if "is_paused" in timelapse:
-            self.warning("Received timelapse update: %s" % (timelapse))
-            self.timelapse.paused = timelapse["is_paused"]
+            self.timelapse.park_paused = timelapse["is_paused"] == True
         else:
             self.warning("Received invalid timelapse update")
             
@@ -324,12 +329,15 @@ class Client:
         return req
 
     def send_to_firebase(self, force=False):
+        # Return early if not ready yet (unless forced)
         if not force and (not self.init_done or not self.klippy_ready):
             return
-        if not force and (self.timelapse is not None and self.timelapse.paused == "true"):
-            self.warning("Timelapse paused, skipping update")
+        
+        # Return early if timelapse is enabled and currently paused (unless forced)
+        if not force and (self.timelapse.enabled and self.timelapse.park_enabled and self.timelapse.park_paused):
+            self.warning("Timelapse is enabled, parked and paused, skipping notification!")
             return
-        self.warning("self.timelapse: %s" % (self.timelapse))
+        
         self.loop.create_task(self.task_firebase())
 
     async def task_firebase(self):
