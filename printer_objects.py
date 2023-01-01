@@ -47,3 +47,14 @@ class VirtualSDCard:
     def __str__(self) -> str:
         return "VirtualSDCard (progress: %f, file_position: %d)" % (self.progress, self.file_position)
 
+class Timelapse:
+
+    def __init__(
+            self,
+            paused=False
+    ) -> None:
+        super().__init__()
+        self.paused = paused
+
+    def __str__(self) -> str:
+        return "Timelapse (paused: %r)" % (self.paused)
