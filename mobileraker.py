@@ -17,7 +17,6 @@ from printer_objects import PrintStats, DisplayStatus, VirtualSDCard
 
 script_dir = pathlib.Path(__file__).parent.resolve().parent
 
-
 class CompanionRequestDto:
     def __init__(self):
         self.print_state = None
@@ -50,7 +49,6 @@ class CompanionRequestDto:
                self.tokens == o.tokens and self.printer_identifier == o.printer_identifier and \
                self.filename == o.filename and self.progress == o.progress and \
                self.printing_duration == o.printing_duration
-
 
 class Client:
     def __init__(
@@ -405,10 +403,9 @@ class CompanionRemoteConfig:
         self.increments = 0.05
         self.uri = "some url"
 
-
 # Taken from Klipper Screen : https://github.com/jordanruthe/KlipperScreen/blob/eedf5448a0e6540d7eb75385f4c5c72d75b41040/ks_includes/config.py#L266-L281
 class CompanionLocalConfig:
-    default_file_name = "Mobileraker.conf"
+    default_file_name = "mobileraker.conf"
 
     def __init__(self, configfile):
         self.config = configparser.ConfigParser()
@@ -447,23 +444,21 @@ class CompanionLocalConfig:
         logging.info("Found configuration file at: %s" % os.path.abspath(file))
         return file
 
-
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Mobileraker - Companion")
     parser.add_argument(
-        "-l", "--logfile", default="/tmp/mobileraker.log", metavar='<logfile>',
+        "-l", "--logfile", default="~/klipper_logs/mobileraker.log", metavar='<logfile>',
         help="log file name and location")
     parser.add_argument(
         "-n", "--nologfile", action='store_true',
         help="disable logging to a file")
     parser.add_argument(
-        "-c", "--configfile", default="~/Mobileraker.conf", metavar='<configfile>',
+        "-c", "--configfile", default="~/klipper_config/mobileraker.conf", metavar='<configfile>',
         help="Location of the configuration file for Mobileraker Companion"
     )
 
     cmd_line_args = parser.parse_args()
-
 
     if cmd_line_args.nologfile:
         log_file = ""
