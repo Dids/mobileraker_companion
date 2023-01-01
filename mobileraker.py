@@ -13,7 +13,7 @@ import coloredlogs
 import requests
 import websockets
 
-from printer_objects import PrintStats, DisplayStatus, VirtualSDCard
+from printer_objects import PrintStats, DisplayStatus, VirtualSDCard, Timelapse
 
 script_dir = pathlib.Path(__file__).parent.resolve().parent
 
