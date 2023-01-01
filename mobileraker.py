@@ -201,6 +201,7 @@ class Client:
             elif key == "virtual_sdcard":
                 await self.parse_virtual_sdcard_update(object_data)
             elif key == "gcode_macro TIMELAPSE_TAKE_FRAME":
+                self.warning("Received TIMELAPSE_TAKE_FRAME")
                 await self.parse_timelapse_update(object_data)
 
     async def parse_server_info(self, message=None, err=None):
@@ -253,7 +254,10 @@ class Client:
     async def parse_timelapse_update(self, timelapse):
         
         if "is_paused" in timelapse:
+            self.warning("Received timelapset update")
             self.timelapse.paused = timelapse["is_paused"]
+        else
+            self.warning("Received invalid timelapse update")
             
     async def query_printer_objects(self):
         self.info("Querying printer Objects")
@@ -327,7 +331,7 @@ class Client:
         if not force and (self.timelapse is not None and self.timelapse.paused == "true"):
             self.warning("Timelapse paused, skipping update")
             return
-        self.info("self.timelapse: %s" % (self.timelapse))
+        self.warning("self.timelapse: %s" % (self.timelapse))
         self.loop.create_task(self.task_firebase())
 
     async def task_firebase(self):
