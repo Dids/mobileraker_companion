@@ -51,10 +51,10 @@ class Timelapse:
 
     def __init__(
             self,
-            paused=False
+            paused=0
     ) -> None:
         super().__init__()
         self.paused = paused
 
     def __str__(self) -> str:
-        return "Timelapse (paused: %r)" % (self.paused)
+        return "Timelapse (paused: %d)" % (self.paused)
