@@ -250,7 +250,7 @@ class Client:
 
     async def parse_timelapse_update(self, timelapse):
         
-        self.info("Received timelapse update: %s" % (timelapse))
+        # self.info("Received timelapse update: %s" % (timelapse))
         
         if "enable" in timelapse:
             self.timelapse.enabled = timelapse["enable"]
@@ -258,8 +258,6 @@ class Client:
             self.timelapse.park_enabled = timelapse["park"]["enable"]       
         if "is_paused" in timelapse:
             self.timelapse.park_paused = timelapse["is_paused"]
-        else:
-            self.warning("Received invalid timelapse update")
             
     async def query_printer_objects(self):
         self.info("Querying printer Objects")
