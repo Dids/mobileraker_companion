@@ -17,15 +17,14 @@ remove_virtualenv()
 
 remove_script()
 {
-# Create systemd service file
+    # Create systemd service file
     SERVICE_FILE="${SYSTEMDDIR}/mobileraker.service"
     [ ! -f $SERVICE_FILE ] && return
     report_status "Stopping the service ..."
-	sudo systemctl stop mobileraker.service
-	sudo systemctl disable mobileraker.service
-	report_status "Removing the service ..."
-	sudo rm $SERVICE_FILE 
-
+    sudo systemctl stop mobileraker.service
+    sudo systemctl disable mobileraker.service
+    report_status "Removing the service ..."
+    sudo rm $SERVICE_FILE
     sudo systemctl daemon-reload
 }
 
@@ -42,11 +41,8 @@ verify_ready()
     fi
 }
 
-
 # Force script to exit if an error occurs
 set -e
-
-
 
 # Run installation steps defined above
 verify_ready
