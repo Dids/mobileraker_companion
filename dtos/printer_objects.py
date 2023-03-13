@@ -102,3 +102,31 @@ class VirtualSDCard:
             n.progress = json["progress"]
 
         return n
+
+
+class Timelapse:
+
+    def __init__(
+            self,
+            enabled=False,
+            park_enabled=False,
+            park_paused=False
+    ) -> None:
+        super().__init__()
+        self.enabled = enabled
+        self.park_enabled = park_enabled
+        self.park_paused = park_paused
+
+    def __str__(self) -> str:
+        return "Timelapse (enabled: %r, park enabled: %r, park paused: %r)" % (self.enabled, self.park_enabled, self.park_paused)
+
+    def updateWith(self, json: Dict[str, Any]) -> 'Timelapse':
+        n = deepcopy(self)
+        if "enabled" in json:
+            n.enabled = json["enabled"]
+        if "park_enabled" in json:
+            n.park_enabled = json["park_enabled"]
+        if "park_paused" in json:
+            n.park_paused = json["park_paused"]
+
+        return n

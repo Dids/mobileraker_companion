@@ -16,7 +16,7 @@ from dtos.mobileraker.companion_request_dto import (DeviceRequestDto,
 from dtos.mobileraker.notification_config_dto import (DeviceNotificationEntry,
                                                       NotificationSnap)
 from dtos.printer_objects import (DisplayStatus, PrintStats, ServerInfo,
-                                  VirtualSDCard)
+                                  VirtualSDCard, Timelapse)
 from i18n import (replace_placeholders, translate,
                   translate_replace_placeholders)
 from mobileraker_fcm import MobilerakerFcmClient
@@ -45,6 +45,7 @@ class MobilerakerCompanion:
         self.print_stats: PrintStats = PrintStats()
         self.display_status: DisplayStatus = DisplayStatus()
         self.virtual_sdcard: VirtualSDCard = VirtualSDCard()
+        self.timelapse: Timelapse = Timelapse()
         self.last_request: Optional[DeviceRequestDto] = None
         # TODO: Fetch this from a remote server for easier configuration :)
         self.remote_config = CompanionRemoteConfig()
@@ -109,6 +110,8 @@ class MobilerakerCompanion:
 
             elif key == "virtual_sdcard":
                 await self._parse_virtual_sdcard_update(object_data)
+            elif key == "timelapse":
+                await self._parse_timelapse_update(object_data)
         self.logger.debug('Src: _parse_notify_status_update')
         self.evaluate_notification()
 
@@ -124,6 +127,9 @@ class MobilerakerCompanion:
 
     async def _parse_virtual_sdcard_update(self, virtual_sdcard):
         self.virtual_sdcard = self.virtual_sdcard.updateWith(virtual_sdcard)
+
+    async def _parse_timelapse_update(self, timelapse):
+        self.timelapse = self.timelapse.updateWith(timelapse)
 
     async def _query_printer_objects(self):
         self.logger.info("Querying printer Objects")
@@ -144,7 +150,8 @@ class MobilerakerCompanion:
             "objects": {
                 "print_stats": None,
                 "display_status": None,
-                "virtual_sdcard": None
+                "virtual_sdcard": None,
+                "gcode_macro TIMELAPSE_TAKE_FRAME": None
             }
         }
         await self._jrpc.send_method("printer.objects.subscribe", self._parse_objects_response, params)
@@ -234,6 +241,10 @@ class MobilerakerCompanion:
 
         if not self.init_done and not force:
             return
+        if not force and (self.timelapse.enabled and self.timelapse.park_enabled and self.timelapse.park_paused):
+            self.warning("Timelapse is enabled, parked and paused, skipping notification!")
+            return
+  
         snapshot = self._take_snapshot()
 
         # Limit evaluation to state changes and 5% increments(Later m117 can also trigger notifications, but might use other stuff)

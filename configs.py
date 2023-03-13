@@ -26,7 +26,7 @@ class CompanionRemoteConfig:
 
 # Taken from Klipper Screen : https://github.com/jordanruthe/KlipperScreen/blob/eedf5448a0e6540d7eb75385f4c5c72d75b41040/ks_includes/config.py#L266-L281
 class CompanionLocalConfig:
-    default_file_name: str = "Mobileraker.conf"
+    default_file_name: str = "mobileraker.conf"
 
     def __init__(self, passed_config_file: str) -> None:
         super().__init__()

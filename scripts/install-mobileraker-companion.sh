@@ -48,7 +48,8 @@ Type=simple
 User=$USER
 WorkingDirectory=${SRCDIR}
 ExecStart=${LAUNCH_CMD} -l ${LOG_PATH}
-Restart=always
+#Restart=always
+Restart=on-failure
 RestartSec=10
 EOF
 # Use systemctl to enable the klipper systemd service script
